@@ -11,7 +11,8 @@ if (PDFTK === undefined)
  */
 PDFTK.execute = function (args, callback) {
   var command = 'pdftk ' + args.join(' ');
-  exec(command, {encoding: 'binary'}, function(err, stdout, stderr) {
+  console.log(command);
+  exec(command, {encoding: 'binary', maxBuffer: 1024 * 1000}, function(err, stdout, stderr) {
     if(err) return callback(new Error(err));
     callback(null, new Buffer(stdout, 'binary'));
   });
@@ -26,8 +27,8 @@ PDFTK.pages = function(pdf, start, end, callback) {
   PDFTK.execute([pdf, 'cat', range, 'output -'], callback);
 };
 
-PDFTK.fillForm = function(pdf, xfdf, callback) {
-  PDFTK.execute([pdf, 'fill_form ', xfdf, 'output - flatten'], callback);
+PDFTK.fillForm = function(pdf, xfdf, output, callback) {
+  PDFTK.execute([pdf, 'fill_form ', xfdf, 'output ', output], callback);
 };
 
 /**
