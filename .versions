@@ -1,4 +1,4 @@
-aadams:pdftk@0.1.1
-local-test:aadams:pdftk@0.1.1
+aadams:pdftk@0.1.3
+local-test:aadams:pdftk@0.1.3
 meteor@1.1.4
 underscore@1.0.2
