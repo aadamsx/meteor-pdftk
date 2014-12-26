@@ -1,7 +1,7 @@
 Package.describe({
   name: 'aadams:pdftk',
   summary: 'PDFTK wrapper for Meteor',
-  version: '0.1.1',
+  version: '0.1.2',
   git: 'https://github.com/aadamsx/meteor-pdftk.git'
 });
 
