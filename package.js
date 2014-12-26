@@ -1,5 +1,6 @@
 Package.describe({
-  summary: "PDFTK wrapper for Meteor"
+  summary: "PDFTK wrapper for Meteor",
+  version: "0.1.1"
 });
 
 Package.on_use(function (api) {
