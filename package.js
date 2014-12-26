@@ -1,12 +1,17 @@
 Package.describe({
-  summary: "PDFTK wrapper for Meteor",
-  version: "0.1.1"
+  name: 'aadams:pdftk',
+  summary: 'PDFTK wrapper for Meteor',
+  version: '0.1.1',
+  git: 'https://github.com/aadamsx/meteor-pdftk.git'
 });
 
-Package.on_use(function (api) {
-  api.use(['underscore'], 'server');
+Package.onUse(function(api) {
+  api.versionsFrom('1.0.2.1');
+  api.addFiles('pdftkWrapper.js');
+});
 
-  api.export('PDFTK');
-
-  api.add_files(['pdftkWrapper.js'], 'server');
+Package.onTest(function(api) {
+  // api.use('tinytest');
+  api.use('aadams:pdftk');
+  // api.addFiles('aadams:pdftk-tests.js');
 });
