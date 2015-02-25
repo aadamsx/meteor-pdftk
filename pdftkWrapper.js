@@ -31,6 +31,11 @@ PDFTK.fillForm = function(pdf, xfdf, output, callback) {
   PDFTK.execute([pdf, 'fill_form ', xfdf, 'output ', output], callback);
 };
 
+// need to add optional inputs to this method
+PDFTK.cat = function(in1, in2, output, callback) {
+  PDFTK.execute([in1, in2, 'cat ', 'output ', output], callback);
+};
+
 /**
  * Stamp
  * Ex: pdftk sample.pdf stamp stamp.pdf output -
