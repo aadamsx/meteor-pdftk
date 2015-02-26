@@ -1,6 +1,6 @@
 Package.describe({
   name: 'aadams:pdftk',
-  summary: 'Wrapper for PDFTK: PDF form fill, real concatination, file merge, split, encrypt, decrypt, rotate, watermark, stamp and more',
+  summary: 'Wrapper for PDFTK: PDF form fill, concatination, watermark, stamp and more',
   version: '0.1.12',
   git: 'https://github.com/aadamsx/meteor-pdftk.git',
   documentation: 'README.md'
