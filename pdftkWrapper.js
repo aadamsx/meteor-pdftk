@@ -36,6 +36,21 @@ PDFTK.cat = function(in1, in2, output, callback) {
   PDFTK.execute([in1, in2, 'cat ', 'output ', output], callback);
 };
 
+PDFTK.cat = function(inputs, output, callback) {
+  var params = _.defaults(inputs,
+    {first: 'undefined', second: 'undefined', third: 'undefined', forth: 'undefined', fifth: 'undefined'}
+  );
+
+  if (params.first === 'undefined'|| params.second === 'undefined') throw 'invalid parameters';
+  else if (params.third !== 'undefined' && (params.forth === 'undefined' || params.fifth === 'undefined'))
+    PDFTK.execute([params.first, params.second, params.third, 'cat ', 'output ', output], callback);
+  else if (params.third !== 'undefined' && params.forth !== 'undefined' && params.fifth === 'undefined')
+    PDFTK.execute([params.first, params.second, params.third, params.forth, 'cat ', 'output ', output], callback);
+  else if (params.third !== 'undefined' && params.forth !== 'undefined' && params.fifth !=== 'undefined')
+    PDFTK.execute([params.first, params.second, params.third, params.forth, params.fifth, 'cat ', 'output ', output], callback);
+  else PDFTK.execute([params.first, params.second, 'cat ', 'output ', output], callback);
+};
+
 /**
  * Stamp
  * Ex: pdftk sample.pdf stamp stamp.pdf output -
