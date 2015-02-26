@@ -32,9 +32,9 @@ PDFTK.fillForm = function(pdf, xfdf, output, callback) {
 };
 
 // need to add optional inputs to this method
-PDFTK.cat = function(in1, in2, output, callback) {
-  PDFTK.execute([in1, in2, 'cat ', 'output ', output], callback);
-};
+// PDFTK.cat = function(in1, in2, output, callback) {
+//   PDFTK.execute([in1, in2, 'cat ', 'output ', output], callback);
+// };
 
 PDFTK.cat = function(inputs, output, callback) {
   var params = _.defaults(inputs,
