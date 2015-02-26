@@ -46,7 +46,7 @@ PDFTK.cat = function(inputs, output, callback) {
     PDFTK.execute([params.first, params.second, params.third, 'cat ', 'output ', output], callback);
   else if (params.third !== 'undefined' && params.forth !== 'undefined' && params.fifth === 'undefined')
     PDFTK.execute([params.first, params.second, params.third, params.forth, 'cat ', 'output ', output], callback);
-  else if (params.third !== 'undefined' && params.forth !== 'undefined' && params.fifth !=== 'undefined')
+  else if (params.third !== 'undefined' && params.forth !== 'undefined' && params.fifth !== 'undefined')
     PDFTK.execute([params.first, params.second, params.third, params.forth, params.fifth, 'cat ', 'output ', output], callback);
   else PDFTK.execute([params.first, params.second, 'cat ', 'output ', output], callback);
 };
