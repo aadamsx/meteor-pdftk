@@ -50,14 +50,14 @@ Note that you need to pass absolute paths to the files because the current direc
 
 Consult the [man page](https://www.pdflabs.com/docs/pdftk-man-page/) for command details.
 
-* [`cat`](https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-cat)`(pdf, start, end, callback)` (aliased: `pages`)
+* [`pages`](https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-cat)`(pdf, start, end, callback)`
 * [`stamp`](https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-stamp)`(pdf, stamp, output, callback)`
 * [`multistamp`](https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-multistamp)`(pdf, stamp, output, callback)`
 * [`fillform`](https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-fill-form)`(pdf, xfdf, output, callback)`
 * [`cat`](https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-cat)`({first: pdf1, second: pdf2}, output, callback)`
 
-Note: the first input to the `cat` wrapper is an optional arguments object, which takes up to 5 pdfs in the following format:
-{first: pdf1, second: pdf2, third: pdf3, forth: pdf4, fifth: pdf5}.  Also, for the `cat` function to work properly, the first two arguments are required of course.
+Note: the first input to the `cat` wrapper is an arguments object, which takes up to 5 pdfs, the first two of which are required, in the following format:
+{first: pdf1, second: pdf2, third: pdf3, forth: pdf4, fifth: pdf5}.  
 
 Pull requests are welcome for more wrappers. If you need to execute a custom command, or one that's not wrapped, run:
 
