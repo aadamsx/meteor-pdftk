@@ -42,7 +42,7 @@ PDFTK.pages = function(pdf, start, end, output, callback) {
  * @return {Npm.buffer} Node.js Buffer with the result of executing the pdftk command
  */
 PDFTK.fillForm = function(pdf, xfdf, output, callback) {
-  PDFTK.execute([pdf, 'fill_form ', xfdf, 'output ', output], callback);
+  PDFTK.execute([pdf, 'fill_form ', xfdf, 'output ', output, 'flatten'], callback);
 };
 
 // todo: add page ranges and file handles
