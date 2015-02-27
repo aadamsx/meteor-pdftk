@@ -8,7 +8,6 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.versionsFrom(['METEOR@0.9.3', 'METEOR@1.0']);
-  // api.use(['underscore'], 'server');
   api.export('PDFTK');
   api.addFiles('pdftk-wrapper.js', 'server');
 });
