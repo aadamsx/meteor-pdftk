@@ -1,5 +1,6 @@
 var exec = Npm.require('child_process').exec;
 var fs = Npm.require('fs');
+// var Q = require("../q");
 
 if (PDFTK === undefined)
   PDFTK = {};
@@ -18,6 +19,89 @@ PDFTK.execute = function (args, callback) {
   });
 };
 
+PDFTK.execute2 = function (args, callback) {
+  var command = 'pdftk ' + args.join(' ');
+  console.log(command);
+  exec(command, {encoding: 'binary', maxBuffer: 1024 * 1000}, function(err, stdout, stderr) {
+    if(err) return callback(new Error(err));
+    callback();
+  });
+};
+
+// todo: add page ranges and file handles
+/**
+ * Assemble pages from the input PDF(s) to create a new PDF. Read more at https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-cat
+ * @param {first: pdf1, second: pdf2, third: pdf3, forth: pdf4, fifth: pdf5}     pdf# - Path to input PDF file
+ * @param {String}      output
+ * @param {Function}    callback
+ * @return {Npm.buffer} Node.js Buffer with the result of executing the pdftk command
+ */
+PDFTK.cat2 = function(inputs, output) {
+  var deferred = Q.defer();
+  var params = _.defaults(inputs,
+    {first: 'undefined', second: 'undefined', third: 'undefined', forth: 'undefined', fifth: 'undefined'}
+  );
+
+  if (params.first === 'undefined'|| params.second === 'undefined') new Error('invalid parameters');
+  else if (params.third !== 'undefined' && (params.forth === 'undefined' || params.fifth === 'undefined')) {
+    PDFTK.execute2([params.first, params.second, params.third, 'cat', 'output', output], function (error) {
+      if (error) {
+        // console.log(error);
+        deferred.reject(error);
+      }
+      else {
+        deferred.resolve();
+      }
+    });
+  }
+  else if (params.third !== 'undefined' && params.forth !== 'undefined' && params.fifth === 'undefined') {
+    PDFTK.execute2([params.first, params.second, params.third, params.forth, 'cat', 'output', output], function (error) {
+      if (error) {
+        deferred.reject(error);
+        // deferred.reject(new Error(error));
+      }
+      else {
+        deferred.resolve();
+      }
+    });
+  }
+  else if (params.third !== 'undefined' && params.forth !== 'undefined' && params.fifth !== 'undefined') {
+    PDFTK.execute2([params.first, params.second, params.third, params.forth, params.fifth, 'cat', 'output', output], function (error) {
+      if (error) {
+        deferred.reject(error);
+      }
+      else {
+        deferred.resolve();
+      }
+    });
+  }
+  else {
+    PDFTK.execute2([params.first, params.second, 'cat', 'output', output], function (error) {
+      if (error) {
+        deferred.reject(error);
+      }
+      else {
+        deferred.resolve();
+      }
+    });
+  }
+  return deferred.promise;
+};
+PDFTK.cat = function(inputs, output, callback) {
+  var params = _.defaults(inputs,
+    {first: 'undefined', second: 'undefined', third: 'undefined', forth: 'undefined', fifth: 'undefined'}
+  );
+
+  if (params.first === 'undefined'|| params.second === 'undefined') throw 'invalid parameters';
+  else if (params.third !== 'undefined' && (params.forth === 'undefined' || params.fifth === 'undefined'))
+    PDFTK.execute([params.first, params.second, params.third, 'cat', 'output', output], callback);
+  else if (params.third !== 'undefined' && params.forth !== 'undefined' && params.fifth === 'undefined')
+    PDFTK.execute([params.first, params.second, params.third, params.forth, 'cat', 'output', output], callback);
+  else if (params.third !== 'undefined' && params.forth !== 'undefined' && params.fifth !== 'undefined')
+    PDFTK.execute([params.first, params.second, params.third, params.forth, params.fifth, 'cat', 'output', output], callback);
+  else PDFTK.execute([params.first, params.second, 'cat', 'output', output], callback);
+};
+
 
 /**
  * Assemble page range from the input PDF to create a new PDF. Read more at https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-cat
@@ -30,7 +114,7 @@ PDFTK.execute = function (args, callback) {
  */
 PDFTK.pages = function(pdf, start, end, output, callback) {
   var range = (start || 1) + '-' + (end || 'end');
-  PDFTK.execute([pdf, 'cat', range, 'output ', output], callback);
+  PDFTK.execute([pdf, 'cat', range, 'output', output], callback);
 };
 
 /**
@@ -41,32 +125,23 @@ PDFTK.pages = function(pdf, start, end, output, callback) {
  * @param {Function}    callback
  * @return {Npm.buffer} Node.js Buffer with the result of executing the pdftk command
  */
-PDFTK.fillForm = function(pdf, xfdf, output, callback) {
-  PDFTK.execute([pdf, 'fill_form ', xfdf, 'output ', output, 'flatten'], callback);
+PDFTK.fillform2 = function(pdf, xfdf, output) {
+ var deferred = Q.defer();
+ PDFTK.execute2([pdf, 'fill_form', xfdf, 'output', output, 'flatten'], function (error) {
+   if (error) {
+    //  console.log(error);
+     deferred.reject(error);
+   }
+   else {
+     deferred.resolve();
+   }
+ });
+ return deferred.promise;
+};
+PDFTK.fillform = function(pdf, xfdf, output, callback) {
+  PDFTK.execute([pdf, 'fill_form', xfdf, 'output', output, 'flatten'], callback);
 };
 
-// todo: add page ranges and file handles
-/**
- * Assemble pages from the input PDF(s) to create a new PDF. Read more at https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-cat
- * @param {first: pdf1, second: pdf2, third: pdf3, forth: pdf4, fifth: pdf5}     pdf# - Path to input PDF file
- * @param {String}      output
- * @param {Function}    callback
- * @return {Npm.buffer} Node.js Buffer with the result of executing the pdftk command
- */
-PDFTK.cat = function(inputs, output, callback) {
-  var params = _.defaults(inputs,
-    {first: 'undefined', second: 'undefined', third: 'undefined', forth: 'undefined', fifth: 'undefined'}
-  );
-
-  if (params.first === 'undefined'|| params.second === 'undefined') throw 'invalid parameters';
-  else if (params.third !== 'undefined' && (params.forth === 'undefined' || params.fifth === 'undefined'))
-    PDFTK.execute([params.first, params.second, params.third, 'cat ', 'output ', output], callback);
-  else if (params.third !== 'undefined' && params.forth !== 'undefined' && params.fifth === 'undefined')
-    PDFTK.execute([params.first, params.second, params.third, params.forth, 'cat ', 'output ', output], callback);
-  else if (params.third !== 'undefined' && params.forth !== 'undefined' && params.fifth !== 'undefined')
-    PDFTK.execute([params.first, params.second, params.third, params.forth, params.fifth, 'cat ', 'output ', output], callback);
-  else PDFTK.execute([params.first, params.second, 'cat ', 'output ', output], callback);
-};
 
 /**
  * Stamp the input PDF with the `stamp` file and produce an `output` PDF. Read more at https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-stamp

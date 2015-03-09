@@ -27,7 +27,7 @@ From the [pdftk man page](http://linux.die.net/man/1/pdftk):
 ## Requirements
 
 You need to have PDFTK installed on the system. Downloads for all operating systems are available at <https://www.pdflabs.com/tools/pdftk-server/>.
-For Linux, you can also run `sudo apt-get install pdftk` (make sure you get the latest version).
+For Linux, you can also run `sudo apt-get install pdftk` (make sure you get the latest version).  Also there is a requirement for Meteor promise library frozeman/q-meteor available at <https://github.com/frozeman/q-meteor/>.
 
 ## Quick Start
 
