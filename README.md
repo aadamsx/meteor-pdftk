@@ -110,7 +110,13 @@ The following APIs are meant to be use inside of Meteor methods.  For example in
 
 Pull requests are welcome for more wrappers. If you need to execute a custom command, or one that's not wrapped, run:
 
+To be used outside a Meteor method
+
 * `PDFTK.execute(args, callback)`
+
+To be used inside a Meteor method
+
+* `PDFTK.executeM(args, callback)`
 
 
 ## Documentation
