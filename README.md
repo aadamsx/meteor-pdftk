@@ -27,7 +27,7 @@ From the [pdftk man page](http://linux.die.net/man/1/pdftk):
 ## Requirements
 
 You need to have PDFTK installed on the system. Downloads for all operating systems are available at <https://www.pdflabs.com/tools/pdftk-server/>.
-For Linux, you can also run `sudo apt-get install pdftk` (make sure you get the latest version).  Also there is a requirement for Meteor promise library frozeman/q-meteor available at <https://github.com/frozeman/q-meteor/>.
+For Linux, you can also run `sudo apt-get install pdftk` (make sure you get the latest version).  Also there is a requirement for Meteor promises library frozeman/q-meteor available at <https://github.com/frozeman/q-meteor/> if you use the Q functions listed below.
 
 ## Quick Start
 
@@ -50,6 +50,8 @@ Note that you need to pass absolute paths to the files because the current direc
 
 Consult the [man page](https://www.pdflabs.com/docs/pdftk-man-page/) for command details.
 
+The following APIs are meant to be use outside of Meteor methods.  For example inside an Iron Router server side route.
+
 * [`pages`](https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-cat)`(pdf, start, end, callback)`
 * [`stamp`](https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-stamp)`(pdf, stamp, output, callback)`
 * [`multistamp`](https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-multistamp)`(pdf, stamp, output, callback)`
@@ -58,6 +60,19 @@ Consult the [man page](https://www.pdflabs.com/docs/pdftk-man-page/) for command
 
 Note: the first input to the `cat` wrapper is an arguments object, which takes up to 5 pdfs, the first two of which are required, in the following format:
 {first: pdf1, second: pdf2, third: pdf3, forth: pdf4, fifth: pdf5}.  
+
+The following APIs are meant to be use outside of Meteor methods, and use the Q library for promises.  For example inside an Iron Router server side route.  Also there is a requirement for Meteor promises library frozeman/q-meteor available at <https://github.com/frozeman/q-meteor/> if you use the APIs listed below.
+
+* [`fillformQ`](https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-fill-form)`(pdf, xfdf, output, callback)`
+* [`catQ`](https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-cat)`({first: pdf1, second: pdf2}, output, callback)`
+
+Node: I've built these APIs in a way that can handle both Q promises and traditional callback functions. Yet the Q library is still required as a deferred promise is still built internally.
+
+The following APIs are meant to be use inside of Meteor methods.  For example inside a Meteor method.
+
+* [`fillformM`](https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-fill-form)`(pdf, xfdf, output, callback)`
+* [`catM`](https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-cat)`({first: pdf1, second: pdf2}, output, callback)`
+
 
 Pull requests are welcome for more wrappers. If you need to execute a custom command, or one that's not wrapped, run:
 

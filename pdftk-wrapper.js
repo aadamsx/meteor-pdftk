@@ -1,5 +1,6 @@
 var exec = Npm.require('child_process').exec;
 var fs = Npm.require('fs');
+var execFile = Npm.require('child_process').execFile;
 // var Q = require("../q");
 
 if (PDFTK === undefined)
@@ -19,7 +20,12 @@ PDFTK.execute = function (args, callback) {
   });
 };
 
-PDFTK.execute2 = function (args, callback) {
+/**
+ * Execute the PDFTK installed in the system, customized
+ * @param  {Array}    args - command-line arguments to pdftk
+ * @param  {Function} callback - callback function that receives error, stdout, and stderr
+ */
+PDFTK.executeQ = function (args, callback) {
   var command = 'pdftk ' + args.join(' ');
   console.log(command);
   exec(command, {encoding: 'binary', maxBuffer: 1024 * 1000}, function(err, stdout, stderr) {
@@ -27,6 +33,24 @@ PDFTK.execute2 = function (args, callback) {
     callback();
   });
 };
+
+/**
+ * Execute the PDFTK installed in the system
+ * @param  {Array}    args - command-line arguments to pdftk
+ * @param  {Function} callback - callback function that receives error, stdout, and stderr
+ */
+PDFTK.executeM = Meteor.wrapAsync(function execute(args, callback) {
+  execFile('pdftk', args, {encoding: 'binary', maxBuffer: 1024 * 1000}, function pdftkCallback(error, stdout, stderr) {
+    if (error) {
+      if (error.code === "ENOENT")
+        callback('Could not find pdftk executable');
+      else
+        callback(error);
+    } else {
+      callback(null, new Buffer(stdout, 'binary'), new Buffer(stderr, 'binary'));
+    }
+  });
+});
 
 // todo: add page ranges and file handles
 /**
@@ -36,7 +60,8 @@ PDFTK.execute2 = function (args, callback) {
  * @param {Function}    callback
  * @return {Npm.buffer} Node.js Buffer with the result of executing the pdftk command
  */
-PDFTK.cat2 = function(inputs, output) {
+ // with Promises, and to be used OUTSIDE of Meteor methods
+PDFTK.catQ = function(inputs, output, callback) {
   var deferred = Q.defer();
   var params = _.defaults(inputs,
     {first: 'undefined', second: 'undefined', third: 'undefined', forth: 'undefined', fifth: 'undefined'}
@@ -44,49 +69,32 @@ PDFTK.cat2 = function(inputs, output) {
 
   if (params.first === 'undefined'|| params.second === 'undefined') new Error('invalid parameters');
   else if (params.third !== 'undefined' && (params.forth === 'undefined' || params.fifth === 'undefined')) {
-    PDFTK.execute2([params.first, params.second, params.third, 'cat', 'output', output], function (error) {
-      if (error) {
-        // console.log(error);
-        deferred.reject(error);
-      }
-      else {
-        deferred.resolve();
-      }
+    PDFTK.executeQ([params.first, params.second, params.third, 'cat', 'output', output], function (error) {
+      if (error) deferred.reject(error);
+      else deferred.resolve();
     });
   }
   else if (params.third !== 'undefined' && params.forth !== 'undefined' && params.fifth === 'undefined') {
-    PDFTK.execute2([params.first, params.second, params.third, params.forth, 'cat', 'output', output], function (error) {
-      if (error) {
-        deferred.reject(error);
-        // deferred.reject(new Error(error));
-      }
-      else {
-        deferred.resolve();
-      }
+    PDFTK.executeQ([params.first, params.second, params.third, params.forth, 'cat', 'output', output], function (error) {
+      if (error) deferred.reject(error);
+      else deferred.resolve();
     });
   }
   else if (params.third !== 'undefined' && params.forth !== 'undefined' && params.fifth !== 'undefined') {
-    PDFTK.execute2([params.first, params.second, params.third, params.forth, params.fifth, 'cat', 'output', output], function (error) {
-      if (error) {
-        deferred.reject(error);
-      }
-      else {
-        deferred.resolve();
-      }
+    PDFTK.executeQ([params.first, params.second, params.third, params.forth, params.fifth, 'cat', 'output', output], function (error) {
+      if (error) deferred.reject(error);
+      else deferred.resolve();
     });
   }
   else {
-    PDFTK.execute2([params.first, params.second, 'cat', 'output', output], function (error) {
-      if (error) {
-        deferred.reject(error);
-      }
-      else {
-        deferred.resolve();
-      }
+    PDFTK.executeQ([params.first, params.second, 'cat', 'output', output], function (error) {
+      if (error) deferred.reject(error);
+      else deferred.resolve();
     });
   }
-  return deferred.promise;
+  return deferred.promise.nodeify(callback);
 };
+// without Promises, and to be used OUTSIDE of Meteor methods
 PDFTK.cat = function(inputs, output, callback) {
   var params = _.defaults(inputs,
     {first: 'undefined', second: 'undefined', third: 'undefined', forth: 'undefined', fifth: 'undefined'}
@@ -100,6 +108,21 @@ PDFTK.cat = function(inputs, output, callback) {
   else if (params.third !== 'undefined' && params.forth !== 'undefined' && params.fifth !== 'undefined')
     PDFTK.execute([params.first, params.second, params.third, params.forth, params.fifth, 'cat', 'output', output], callback);
   else PDFTK.execute([params.first, params.second, 'cat', 'output', output], callback);
+};
+// without Promises, and to be used INSIDE of Meteor methods
+PDFTK.catM = function(inputs, output, callback) {
+  var params = _.defaults(inputs,
+    {first: 'undefined', second: 'undefined', third: 'undefined', forth: 'undefined', fifth: 'undefined'}
+  );
+
+  if (params.first === 'undefined'|| params.second === 'undefined') throw 'invalid parameters';
+  else if (params.third !== 'undefined' && (params.forth === 'undefined' || params.fifth === 'undefined'))
+    PDFTK.executeM([params.first, params.second, params.third, 'cat', 'output', output], callback);
+  else if (params.third !== 'undefined' && params.forth !== 'undefined' && params.fifth === 'undefined')
+    PDFTK.executeM([params.first, params.second, params.third, params.forth, 'cat', 'output', output], callback);
+  else if (params.third !== 'undefined' && params.forth !== 'undefined' && params.fifth !== 'undefined')
+    PDFTK.executeM([params.first, params.second, params.third, params.forth, params.fifth, 'cat', 'output', output], callback);
+  else PDFTK.executeM([params.first, params.second, 'cat', 'output', output], callback);
 };
 
 
@@ -125,21 +148,22 @@ PDFTK.pages = function(pdf, start, end, output, callback) {
  * @param {Function}    callback
  * @return {Npm.buffer} Node.js Buffer with the result of executing the pdftk command
  */
-PDFTK.fillform2 = function(pdf, xfdf, output) {
+// with Promises, and to be used OUTSIDE of Meteor methods
+PDFTK.fillformQ = function(pdf, xfdf, output, callback) {
  var deferred = Q.defer();
- PDFTK.execute2([pdf, 'fill_form', xfdf, 'output', output, 'flatten'], function (error) {
-   if (error) {
-    //  console.log(error);
-     deferred.reject(error);
-   }
-   else {
-     deferred.resolve();
-   }
+ PDFTK.executeQ([pdf, 'fill_form', xfdf, 'output', output, 'flatten'], function (error) {
+   if (error) deferred.reject(error);
+   else deferred.resolve();
  });
- return deferred.promise;
+ return deferred.promise.nodeify(callback);
 };
+// without Promises, and to be used OUTSIDE of Meteor methods
 PDFTK.fillform = function(pdf, xfdf, output, callback) {
   PDFTK.execute([pdf, 'fill_form', xfdf, 'output', output, 'flatten'], callback);
+};
+// without Promises, and to be used INSIDE of Meteor methods
+PDFTK.fillformM = function(pdf, xfdf, output, callback) {
+  PDFTK.executeM([pdf, 'fill_form', xfdf, 'output', output, 'flatten'], callback);
 };
 
 
