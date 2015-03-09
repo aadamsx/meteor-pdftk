@@ -13,7 +13,6 @@ if (PDFTK === undefined)
  */
 PDFTK.execute = function (args, callback) {
   var command = 'pdftk ' + args.join(' ');
-  console.log(command);
   exec(command, {encoding: 'binary', maxBuffer: 1024 * 1000}, function(err, stdout, stderr) {
     if(err) return callback(new Error(err));
     callback(null, new Buffer(stdout, 'binary'));
@@ -27,7 +26,6 @@ PDFTK.execute = function (args, callback) {
  */
 PDFTK.executeQ = function (args, callback) {
   var command = 'pdftk ' + args.join(' ');
-  console.log(command);
   exec(command, {encoding: 'binary', maxBuffer: 1024 * 1000}, function(err, stdout, stderr) {
     if(err) return callback(new Error(err));
     callback();

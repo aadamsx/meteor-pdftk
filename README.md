@@ -31,10 +31,44 @@ For Linux, you can also run `sudo apt-get install pdftk` (make sure you get the 
 
 ## Quick Start
 
-Add the package with `meteor add pdftk:pdftk`. In your server code, you can run wrappers like this:
+Add the package with `meteor add aadams:pdftk`. In your server code, you can run wrappers like this:
 
 ```js
 PDFTK.stamp('/path/to/in.pdf', '/path/to/stamp.pdf', '/path/to/pdfstamp/out.pdf', function (error, stdout, stderr) {
+  if (error) console.log('Error:', error);
+  else {
+    // success
+  }
+})
+```
+
+Example of calling with a promise
+```js
+PDFTK.formfillQ('/path/to/pdftemplate/in.pdf', '/path/to/xfdf.xfdf', '/path/to/pdffile/out.pdf')
+.then(function () {
+  console.log('form fill passed!');
+}
+.catch(function (error) {
+  console.log('darn an error: ', error);
+})
+.done(function (result) {
+  console.log('done');
+});
+```
+
+Same function as above without a promise
+```js
+PDFTK.formfillQ('/path/to/pdftemplate/in.pdf', '/path/to/xfdf.xfdf', '/path/to/pdffile/out.pdf', function (error, stdout, stderr) {
+  if (error) console.log('Error:', error);
+  else {
+    // success
+  }
+})
+```
+
+Call this within a Meteor method
+```js
+PDFTK.formfillM('/path/to/pdftemplate/in.pdf', '/path/to/xfdf.xfdf', '/path/to/pdffile/out.pdf', function (error, stdout, stderr) {
   if (error) console.log('Error:', error);
   else {
     // success
