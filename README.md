@@ -68,7 +68,7 @@ PDFTK.formfillQ('/path/to/pdftemplate/in.pdf', '/path/to/xfdf.xfdf', '/path/to/p
 
 Call this within a Meteor method
 ```js
-PDFTK.formfillM('/path/to/pdftemplate/in.pdf', '/path/to/xfdf.xfdf', '/path/to/pdffile/out.pdf', function (error, stdout, stderr) {
+PDFTK.formfill('/path/to/pdftemplate/in.pdf', '/path/to/xfdf.xfdf', '/path/to/pdffile/out.pdf', function (error, stdout, stderr) {
   if (error) console.log('Error:', error);
   else {
     // success
@@ -102,7 +102,7 @@ The following APIs are meant to be use outside of Meteor methods, and use the Q 
 
 Node: I've built these APIs in a way that can handle both Q promises and traditional callback functions. Yet the Q library is still required as a deferred promise is still built internally.
 
-The following APIs are meant to be use outside of Meteor methods.  For example inside an Iron Router server side route. 
+The following APIs are meant to be use outside of Meteor methods.  For example inside an Iron Router server side route.
 
 * [`fillformN`](https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-fill-form)`(pdf, xfdf, output, callback)`
 * [`catN`](https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-cat)`({first: pdf1, second: pdf2}, output, callback)`
