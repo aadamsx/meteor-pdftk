@@ -84,7 +84,7 @@ Note that you need to pass absolute paths to the files because the current direc
 
 Consult the [man page](https://www.pdflabs.com/docs/pdftk-man-page/) for command details.
 
-The following APIs are meant to be use outside of Meteor methods.  For example inside an Iron Router server side route.
+The following APIs are meant to be use inside of Meteor methods.  
 
 * [`pages`](https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-cat)`(pdf, start, end, callback)`
 * [`stamp`](https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-stamp)`(pdf, stamp, output, callback)`
@@ -102,21 +102,21 @@ The following APIs are meant to be use outside of Meteor methods, and use the Q 
 
 Node: I've built these APIs in a way that can handle both Q promises and traditional callback functions. Yet the Q library is still required as a deferred promise is still built internally.
 
-The following APIs are meant to be use inside of Meteor methods.  For example inside a Meteor method.
+The following APIs are meant to be use outside of Meteor methods.  For example inside an Iron Router server side route. 
 
-* [`fillformM`](https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-fill-form)`(pdf, xfdf, output, callback)`
-* [`catM`](https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-cat)`({first: pdf1, second: pdf2}, output, callback)`
+* [`fillformN`](https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-fill-form)`(pdf, xfdf, output, callback)`
+* [`catN`](https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-cat)`({first: pdf1, second: pdf2}, output, callback)`
 
 
 Pull requests are welcome for more wrappers. If you need to execute a custom command, or one that's not wrapped, run:
 
 To be used outside a Meteor method
 
-* `PDFTK.execute(args, callback)`
+* `PDFTK.executeN(args, callback)`
 
 To be used inside a Meteor method
 
-* `PDFTK.executeM(args, callback)`
+* `PDFTK.execute(args, callback)`
 
 
 ## Documentation
