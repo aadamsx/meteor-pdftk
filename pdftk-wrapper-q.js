@@ -1,5 +1,5 @@
 var fs = Npm.require('fs');
-var execFile = Npm.require('child_process').execFile;
+var exec = Npm.require('child_process').exec;
 // var Q = require("../q");
 
 if (PDFTK === undefined)
