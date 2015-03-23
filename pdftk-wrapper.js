@@ -31,19 +31,37 @@ PDFTK.execute = Meteor.wrapAsync(function execute(args, callback) {
  * @param {Function}    callback
  * @return {Npm.buffer} Node.js Buffer with the result of executing the pdftk command
  */
-PDFTK.cat = function(inputs, output, callback) {
+PDFTK.cat = function(inputs, output) {
+  /** this method calls out synchronous, by omitting the callback to the wrap async function PDFTK.execute */
+
   var params = _.defaults(inputs,
-    {first: 'undefined', second: 'undefined', third: 'undefined', forth: 'undefined', fifth: 'undefined'}
+    {first: 'undefined', second: 'undefined', third: 'undefined', forth: 'undefined', fifth: 'undefined', sixth: 'undefined', seventh: 'undefined', eighth: 'undefined'}
   );
 
-  if (params.first === 'undefined'|| params.second === 'undefined') throw 'invalid parameters';
-  else if (params.third !== 'undefined' && (params.forth === 'undefined' || params.fifth === 'undefined'))
-    PDFTK.execute([params.first, params.second, params.third, 'cat', 'output', output], callback);
-  else if (params.third !== 'undefined' && params.forth !== 'undefined' && params.fifth === 'undefined')
-    PDFTK.execute([params.first, params.second, params.third, params.forth, 'cat', 'output', output], callback);
-  else if (params.third !== 'undefined' && params.forth !== 'undefined' && params.fifth !== 'undefined')
-    PDFTK.execute([params.first, params.second, params.third, params.forth, params.fifth, 'cat', 'output', output], callback);
-  else PDFTK.execute([params.first, params.second, 'cat', 'output', output], callback);
+  // console.log(params);
+
+  if (params.first === 'undefined'|| params.second === 'undefined') new Error('invalid parameters');
+  else if (params.eighth !== 'undefined') {
+    PDFTK.execute([params.first, params.second, params.third, params.forth, params.fifth, params.sixth, params.seventh, params.eighth, 'cat', 'output', output]);
+  }
+  else if (params.seventh !== 'undefined') {
+    PDFTK.execute([params.first, params.second, params.third, params.forth, params.fifth, params.sixth, params.seventh, 'cat', 'output', output]);
+  }
+  else if (params.sixth !== 'undefined') {
+    PDFTK.execute([params.first, params.second, params.third, params.forth, params.fifth, params.sixth, 'cat', 'output', output]);
+  }
+  else if (params.fifth !== 'undefined') {
+    PDFTK.execute([params.first, params.second, params.third, params.forth, params.fifth, 'cat', 'output', output]);
+  }
+  else if (params.forth !== 'undefined') {
+    PDFTK.execute([params.first, params.second, params.third, params.forth, 'cat', 'output', output]);
+  }
+  else if (params.third !== 'undefined') {
+    PDFTK.execute([params.first, params.second, params.third, 'cat', 'output', output]);
+  }
+  else {
+    PDFTK.execute([params.first, params.second, 'cat', 'output', output]);
+  }
 };
 
 
@@ -56,9 +74,9 @@ PDFTK.cat = function(inputs, output, callback) {
  * @param {Function}    callback
  * @return {Npm.buffer} Node.js Buffer with the result of executing the pdftk command
  */
-PDFTK.pages = function(pdf, start, end, output, callback) {
+PDFTK.pages = function(pdf, start, end, output) {
   var range = (start || 1) + '-' + (end || 'end');
-  PDFTK.execute([pdf, 'cat', range, 'output', output], callback);
+  PDFTK.execute([pdf, 'cat', range, 'output', output]);
 };
 
 /**
@@ -70,10 +88,10 @@ PDFTK.pages = function(pdf, start, end, output, callback) {
  * @return {Npm.buffer} Node.js Buffer with the result of executing the pdftk command
  */
 // without Promises, and to be used INSIDE of Meteor methods
-PDFTK.fillform = function(pdf, xfdf, output, callback) {
-  PDFTK.execute([pdf, 'fill_form', xfdf, 'output', output, 'flatten'], callback);
+PDFTK.fillform = function(pdf, xfdf, output) {
+  /** this method calls out synchronous, by omitting the callback to the wrap async function PDFTK.execute */
+  PDFTK.execute([pdf, 'fill_form', xfdf, 'output', output, 'flatten']);
 };
-
 
 /**
  * Stamp the input PDF with the `stamp` file and produce an `output` PDF. Read more at https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-stamp
@@ -83,8 +101,8 @@ PDFTK.fillform = function(pdf, xfdf, output, callback) {
  * @param {Function}    callback
  * @return {Npm.buffer} Node.js Buffer with the result of executing the pdftk command
  */
-PDFTK.stamp = function(pdf, stamp, output, callback) {
-  PDFTK.execute([pdf, 'stamp', stamp, 'output', output], callback);
+PDFTK.stamp = function(pdf, stamp, output) {
+  PDFTK.execute([pdf, 'stamp', stamp, 'output', output]);
 };
 
 /**
@@ -95,6 +113,6 @@ PDFTK.stamp = function(pdf, stamp, output, callback) {
  * @param {Function}    callback
  * @return {Npm.buffer} Node.js Buffer with the result of executing the pdftk command
  */
-PDFTK.multistamp = function multistamp(pdf, stamp, output, callback) {
-  return PDFTK.execute([pdf, 'multistamp', stamp, 'output', output], callback);
+PDFTK.multistamp = function multistamp(pdf, stamp, output) {
+  return PDFTK.execute([pdf, 'multistamp', stamp, 'output', output]);
 };
