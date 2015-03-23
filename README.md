@@ -38,10 +38,7 @@ Please Note: this method calls out synchronous, by omitting the callback
 PDFTK.stamp('/path/to/in.pdf', '/path/to/stamp.pdf', '/path/to/pdfstamp/out.pdf');
 ```
 
-```
-
-Note that you need to pass absolute paths to the files because the current directory when running `meteor` is going to be
-`.meteor/local/build/programs/server/` when debugging, and something similar in production.
+Note that you need to pass absolute paths to the files because the current directory when running `meteor` is going to be `.meteor/local/build/programs/server/` when debugging, and something similar in production.
 
 
 ## Command wrappers

@@ -1,6 +1,4 @@
 var fs = Npm.require('fs');
-var execFile = Npm.require('child_process').execFile;
-// var Q = require("../q");
 
 if (PDFTK === undefined)
   PDFTK = {};
@@ -8,7 +6,6 @@ if (PDFTK === undefined)
 /*
  * Execute the PDFTK installed in the system
  * @param  {Array}    args - command-line arguments to pdftk
- * @param  {Function} callback - callback function that receives error, stdout, and stderr
  */
 PDFTK.execute = Meteor.wrapAsync(function execute(args, callback) {
   execFile('pdftk', args, {encoding: 'binary', maxBuffer: 1024 * 1000}, function pdftkCallback(error, stdout, stderr) {
@@ -28,7 +25,6 @@ PDFTK.execute = Meteor.wrapAsync(function execute(args, callback) {
  * Assemble pages from the input PDF(s) to create a new PDF. Read more at https://www.pdflabs.com/docs/pdftk-man-page/#dest-op-cat
  * @param {first: pdf1, second: pdf2, third: pdf3, forth: pdf4, fifth: pdf5}     pdf# - Path to input PDF file
  * @param {String}      output
- * @param {Function}    callback
  * @return {Npm.buffer} Node.js Buffer with the result of executing the pdftk command
  */
 PDFTK.cat = function(inputs, output) {
@@ -71,7 +67,6 @@ PDFTK.cat = function(inputs, output) {
  * @param {String}      start
  * @param {String}      end
  * @param {String}      output
- * @param {Function}    callback
  * @return {Npm.buffer} Node.js Buffer with the result of executing the pdftk command
  */
 PDFTK.pages = function(pdf, start, end, output) {
@@ -84,7 +79,6 @@ PDFTK.pages = function(pdf, start, end, output) {
  * @param {String}      pdf - path to the input PDF file
  * @param {String}      xfdf - path to the (X)FDF file
  * @param {String}      output - path to the output PDF file
- * @param {Function}    callback
  * @return {Npm.buffer} Node.js Buffer with the result of executing the pdftk command
  */
 // without Promises, and to be used INSIDE of Meteor methods
@@ -98,7 +92,6 @@ PDFTK.fillform = function(pdf, xfdf, output) {
  * @param {String}      pdf - path to the input PDF file
  * @param {String}      stamp - path to the stamp PDF file
  * @param {String}      output - path to the output PDF file
- * @param {Function}    callback
  * @return {Npm.buffer} Node.js Buffer with the result of executing the pdftk command
  */
 PDFTK.stamp = function(pdf, stamp, output) {
@@ -110,7 +103,6 @@ PDFTK.stamp = function(pdf, stamp, output) {
  * @param {String}      pdf - path to the input PDF file
  * @param {String}      stamp - path to the stamp PDF file
  * @param {String}      output - path to the output PDF file
- * @param {Function}    callback
  * @return {Npm.buffer} Node.js Buffer with the result of executing the pdftk command
  */
 PDFTK.multistamp = function multistamp(pdf, stamp, output) {
